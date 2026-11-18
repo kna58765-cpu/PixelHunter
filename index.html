@@ -62,8 +62,17 @@ function endGame(){setState('over');if(score>best){best=score;localStorage.phBes
 $('block').addEventListener('click',e=>{e.preventDefault();castBlock()});$('langToggle').onclick=toggleLanguage;$('start').onclick=start;$('weaponPick').onclick=()=>{weaponMode=(weaponMode+1)%weaponNames.length;$('weaponPick').textContent='武器：'+weaponNames[weaponMode];sound(620,.07,'triangle',.02)};$('pause').onclick=pause;$('skill').addEventListener('click',e=>{e.preventDefault();castSkill()});$('hit').addEventListener('click',e=>{e.preventDefault();attack()});
 const joystick=$('joystick'),stick=$('stick');function setStick(x,y){if(!stick)return;stick.style.transform=`translate(${x}px,${y}px)`}function updateJoystick(e){const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,max=r.width*.34;let dx=e.clientX-cx,dy=e.clientY-cy,l=Math.hypot(dx,dy)||1;if(l>max){dx=dx/l*max;dy=dy/l*max}joystickVector={x:dx/max,y:dy/max};setStick(dx,dy)}function releaseJoystick(){joystickVector={x:0,y:0};setStick(0,0)}joystick.addEventListener('pointerdown',e=>{if(state!=='playing')return;e.preventDefault();try{joystick.setPointerCapture(e.pointerId)}catch(err){}updateJoystick(e)});joystick.addEventListener('pointermove',e=>{if(joystick.hasPointerCapture(e.pointerId))updateJoystick(e)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>joystick.addEventListener(ev,releaseJoystick));joystick.addEventListener('touchstart',e=>{if(state!=='playing')return;e.preventDefault();const t=e.changedTouches[0];updateJoystick({clientX:t.clientX,clientY:t.clientY})},{passive:false});joystick.addEventListener('touchmove',e=>{if(state!=='playing')return;e.preventDefault();const t=e.changedTouches[0];updateJoystick({clientX:t.clientX,clientY:t.clientY})},{passive:false});['touchend','touchcancel'].forEach(ev=>joystick.addEventListener(ev,e=>{e.preventDefault();releaseJoystick()},{passive:false}));
 addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();attack()}if(e.key==='q'||e.key==='Q'){castSkill()}if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault()});addEventListener('keyup',e=>keys[e.key]=false);addEventListener('blur',()=>{keys={};touch={};releaseJoystick()});
-// Android WebView touch fallback for dynamically-rendered menu buttons.
-overlay.addEventListener('touchstart',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;e.preventDefault();b.click()},{passive:false});
+// Android WebView: handle menu taps on touchend and call the bound action directly.
+overlay.addEventListener('touchend',e=>{
+ const target=e.target&&e.target.nodeType===1?e.target:e.target?.parentElement;
+ const b=target?.closest('button');
+ if(!b||b.disabled)return;
+ e.preventDefault();
+ e.stopPropagation();
+ if(typeof b.onclick==='function') b.onclick.call(b,e);
+ else b.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
+},{passive:false,capture:true});
+overlay.addEventListener('click',e=>{const target=e.target&&e.target.nodeType===1?e.target:e.target?.parentElement;const b=target?.closest('button');if(b&&!b.disabled&&typeof b.onclick==='function'&&b.dataset.touchFallback==='1'){b.dataset.touchFallback='0';b.onclick.call(b,e)}},true);
 reset();menu();applyLanguage();requestAnimationFrame(loop);
 })();
 </script></body></html>
