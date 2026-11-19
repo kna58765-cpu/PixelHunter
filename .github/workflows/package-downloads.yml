@@ -41,8 +41,6 @@ jobs:
       - name: Build separate ZIP packages
         run: |
           mkdir -p out/android/PixelHunter-Android-1.5.3 out/ios/PixelHunter-iOS-I1.5.3
-          cp index.html manifest.webmanifest icon.svg out/android/PixelHunter-Android-1.5.3/
-          cp -R assets app build.gradle settings.gradle gradle.properties out/android/PixelHunter-Android-1.5.3/
           cp app/build/outputs/apk/debug/app-debug.apk out/android/PixelHunter-Android-1.5.3/PixelHunter-Android-1.5.3.apk
           cp ios/index.html ios/manifest.webmanifest ios/sw.js out/ios/PixelHunter-iOS-I1.5.3/
           cp -R assets out/ios/PixelHunter-iOS-I1.5.3/
