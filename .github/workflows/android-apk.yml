@@ -40,6 +40,8 @@ jobs:
           cp index.html app/src/main/assets/www/index.html
           cp icon.svg app/src/main/assets/www/icon.svg
           cp manifest.webmanifest app/src/main/assets/www/manifest.webmanifest
+          mkdir -p app/src/main/assets/www/assets
+          cp -R assets/. app/src/main/assets/www/assets/
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - name: Upload APK
