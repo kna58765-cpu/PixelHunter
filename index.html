@@ -32,7 +32,7 @@ const rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const yellowSprites=[];
 for(const file of ['yellow_idle.png','yellow_wave.png','yellow_laugh.png']){const im=new Image();im.src='assets/'+file;im.decoding='async';yellowSprites.push(im)}
 const yellowAttackAudio=new Audio('assets/yellow_attack.mp3');yellowAttackAudio.preload='auto';
-function playYellowAttack(){if(yellowAttackAudio.paused){yellowAttackAudio.currentTime=0;yellowAttackAudio.play().catch(()=>{})}}
+let lastYellowAttackAt=0;function playYellowAttack(){const now=performance.now();if(now-lastYellowAttackAt<220)return;lastYellowAttackAt=now;yellowAttackAudio.pause();yellowAttackAudio.currentTime=0;yellowAttackAudio.play().catch(()=>{})}
 
 function isBoss(t){return ['boss','stoneBoss','voidBoss','finalBoss'].includes(t)}
 const weaponCycle=[0,3,1];function weaponLabel(){return weaponMode===3?'弓箭':weaponMode===1?'长枪':'铁剑'}
