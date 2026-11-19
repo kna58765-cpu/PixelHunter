@@ -17,7 +17,7 @@
 </style>
 </head>
 <body><div id="rotateNotice"><div><span class="rotateIcon">📱</span>请将手机旋转至横屏<br><small style="display:block;margin-top:12px;color:#91a8c7;font-size:13px">PIXEL HUNTER 横屏模式</small></div></div><main id="shell">
-<header class="top"><div class="brand">PIXEL <span>HUNTER</span><small class="ver">V1.4</small></div><div style="display:flex;align-items:center;gap:6px"><button class="smallbtn" id="langToggle" type="button">English</button><div class="stats"><div class="stat">得分<b id="score">0</b></div><div class="stat">生命<b id="hp">♥♥♥♥♥</b></div><div class="stat">时间<b id="time">00:00</b></div><div class="stat">击杀<b id="kills">0</b></div><div class="stat">波次<b id="wave">1</b></div><div class="stat">武器<b id="weapon">木剑 Lv.1</b></div></div></div></header>
+<header class="top"><div class="brand">PIXEL <span>HUNTER</span><small class="ver">V1.5.0</small></div><div style="display:flex;align-items:center;gap:6px"><button class="smallbtn" id="langToggle" type="button">English</button><div class="stats"><div class="stat">得分<b id="score">0</b></div><div class="stat">生命<b id="hp">♥♥♥♥♥</b></div><div class="stat">时间<b id="time">00:00</b></div><div class="stat">击杀<b id="kills">0</b></div><div class="stat">波次<b id="wave">1</b></div><div class="stat">武器<b id="weapon">木剑 Lv.1</b></div></div></div></header>
 <section id="stage"><canvas id="game" width="480" height="270"></canvas><div id="overlay"><div class="panel"><h1>PIXEL <em>HUNTER</em></h1><p>怪物正在逼近。拿起武器，尽可能活下去！<br>击败怪物获得积分，撑过一波又一波。</p><button class="mainbtn" id="start">开始狩猎</button><p class="hint">电脑：WASD / 方向键移动，空格攻击<br>手机：左侧摇杆移动，右侧攻击与技能<br>击败怪物有机会掉落补给：绿色回血，蓝色加分</p></div></div></section>
 <section class="controls"><div class="joystick" id="joystick" aria-label="移动摇杆"><div class="stick" id="stick"></div><div class="joystick-label">MOVE</div></div><div class="actions"><button class="smallbtn" id="pause">暂停</button><button class="weaponbtn" id="weaponPick">武器：剑</button><button class="skill" id="block">格挡<br>就绪</button><button class="skill" id="skill">火焰<br>就绪</button><button class="attack" id="hit">挥剑<br>ATTACK</button></div></section><footer class="bottom">补给：绿色 +1 生命 · 蓝色 +50 分　 |　 PIXEL HUNTER V1.5.0 · 本地最高分 <span id="best">0</span></footer>
 </main>
@@ -30,7 +30,7 @@ let state='menu',victory=false,player,monsters,particles,pickups,score,kills,ela
 $('best').textContent=best;
 const rand=(a,b)=>a+Math.random()*(b-a),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const yellowSprites=[];
-for(let i=1;i<=3;i++){const im=new Image();im.src='assets/yellow_'+i+'.png';yellowSprites.push(im)}
+for(const file of ['yellow_idle.png','yellow_wave.png','yellow_laugh.png']){const im=new Image();im.src='assets/'+file;im.decoding='async';yellowSprites.push(im)}
 const yellowAttackAudio=new Audio('assets/yellow_attack.mp3');yellowAttackAudio.preload='auto';
 function playYellowAttack(){if(yellowAttackAudio.paused){yellowAttackAudio.currentTime=0;yellowAttackAudio.play().catch(()=>{})}}
 
