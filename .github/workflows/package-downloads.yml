@@ -1,0 +1,36 @@
+name: Package Android and iOS ZIPs
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'downloads/**'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build separate ZIP packages
+        run: |
+          mkdir -p out/android/PixelHunter-Android-V1.5.3 out/ios/PixelHunter-iOS-I1.5.3
+          cp index.html manifest.webmanifest icon.svg out/android/PixelHunter-Android-V1.5.3/
+          cp -R assets app build.gradle settings.gradle gradle.properties out/android/PixelHunter-Android-V1.5.3/
+          cp ios/index.html ios/manifest.webmanifest ios/sw.js out/ios/PixelHunter-iOS-I1.5.3/
+          cp -R assets out/ios/PixelHunter-iOS-I1.5.3/
+          cp icon.svg out/ios/PixelHunter-iOS-I1.5.3/
+          cd out/android && zip -qr ../../PixelHunter-Android-V1.5.3.zip PixelHunter-Android-V1.5.3
+          cd ../../out/ios && zip -qr ../../PixelHunter-iOS-I1.5.3.zip PixelHunter-iOS-I1.5.3
+      - name: Publish ZIPs to downloads folder
+        run: |
+          mkdir -p downloads
+          cp PixelHunter-Android-V1.5.3.zip downloads/
+          cp PixelHunter-iOS-I1.5.3.zip downloads/
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add downloads/*.zip
+          git commit -m "Add Android V1.5.3 and iOS I1.5.3 ZIP packages" || exit 0
+          git push
