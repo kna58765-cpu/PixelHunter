@@ -40,12 +40,12 @@ jobs:
           gradle --no-daemon assembleDebug
       - name: Build separate ZIP packages
         run: |
-          mkdir -p out/android/PixelHunter-Android-1.5.3 out/ios/PixelHunter-iOS-I1.5.3
-          cp app/build/outputs/apk/debug/app-debug.apk out/android/PixelHunter-Android-1.5.3/PixelHunter-Android-1.5.3.apk
+          mkdir -p out/android out/ios/PixelHunter-iOS-I1.5.3
+          cp app/build/outputs/apk/debug/app-debug.apk out/android/PixelHunter-Android-1.5.3.apk
           cp ios/index.html ios/manifest.webmanifest ios/sw.js out/ios/PixelHunter-iOS-I1.5.3/
           cp -R assets out/ios/PixelHunter-iOS-I1.5.3/
           cp icon.svg out/ios/PixelHunter-iOS-I1.5.3/
-          cd out/android && zip -qr ../../PixelHunter-Android-1.5.3.zip PixelHunter-Android-1.5.3
+          cd out/android && zip -q ../../PixelHunter-Android-1.5.3.zip PixelHunter-Android-1.5.3.apk
           cd ../../out/ios && zip -qr ../../PixelHunter-iOS-I1.5.3.zip PixelHunter-iOS-I1.5.3
       - name: Publish ZIPs to downloads folder
         run: |
